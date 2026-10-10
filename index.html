@@ -1,0 +1,1370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/png" href="x.png">
+<title>My Song Collection</title>
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+
+:root{
+  --deep:#07594e;
+  --deep2:#0a6658;
+  --mint:#b9e9bd;
+  --cream:#fff3a7;
+  --glass:rgba(255,255,255,.38);
+  --glass2:rgba(255,255,255,.58);
+}
+
+html{scroll-behavior:smooth}
+
+body{
+  min-height:100vh;
+  color:var(--deep);
+  font-family:Arial,Helvetica,sans-serif;
+  overflow-x:hidden;
+  background:
+    radial-gradient(circle at 50% 8%,#fffbd3 0 6%,#ffe78b 14%,transparent 34%),
+    linear-gradient(180deg,#ffe995 0%,#eef0b4 38%,#b9e9bd 72%,#93dcb5 100%);
+}
+
+
+body:before{
+  content:"";
+  position:fixed;
+  width:280px;
+  height:280px;
+  top:20px;
+  left:50%;
+  transform:translateX(-50%);
+  border-radius:50%;
+  background:rgba(255,235,105,.55);
+  filter:blur(42px);
+  z-index:-2;
+}
+
+
+.heart{
+  position:fixed;
+  color:var(--deep);
+  font-size:46px;
+  opacity:.82;
+  pointer-events:none;
+  z-index:-1;
+}
+.heart.a{left:5%;top:14%}
+.heart.b{right:6%;top:8%}
+.heart.c{left:7%;top:53%}
+.heart.d{right:7%;top:62%}
+.heart.e{right:9%;bottom:18%}
+
+.page{
+  width:min(960px,100%);
+  margin:auto;
+  padding:35px 18px 0;
+}
+
+
+.hero{
+  text-align:center;
+  padding:10px 10px 55px;
+}
+
+.sun{
+  width:108px;
+  height:108px;
+  margin:0 auto 24px;
+  border-radius:50%;
+  background:#ffd65a;
+  box-shadow:0 0 65px rgba(255,185,35,.72);
+}
+
+.hero h1{
+  font-family:"Brush Script MT","Segoe Script",cursive;
+  font-size:clamp(3.2rem,8vw,6rem);
+  font-weight:700;
+  line-height:.95;
+  letter-spacing:-2px;
+}
+
+.hero p{
+  margin-top:15px;
+  font-size:.82rem;
+  font-weight:800;
+  letter-spacing:5px;
+  opacity:.75;
+}
+
+.hero .line{
+  margin:17px auto 0;
+  font-size:23px;
+  letter-spacing:12px;
+}
+
+
+.song{
+  display:none;
+  margin-bottom:82px;
+  animation: songFade .45s ease;
+}
+
+.song.active{display:block}
+
+@keyframes songFade{
+  from{opacity:0;transform:translateY(12px)}
+  to{opacity:1;transform:translateY(0)}
+}
+
+.song-heading{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  gap:16px;
+  margin-bottom:23px;
+  text-align:center;
+}
+
+.song-number{
+  width:52px;
+  height:52px;
+  flex:0 0 52px;
+  display:grid;
+  place-items:center;
+  border-radius:50%;
+  color:#fff8c8;
+  background:var(--deep);
+  font-size:1.35rem;
+  font-weight:900;
+  box-shadow:0 10px 24px rgba(7,89,78,.2);
+}
+
+.song-name{
+  font-family:"Brush Script MT","Segoe Script",cursive;
+  font-size:clamp(2.5rem,6vw,4.8rem);
+  font-weight:700;
+  line-height:.9;
+}
+
+.song-meta{
+  margin-top:9px;
+  font-size:.82rem;
+  font-weight:800;
+  letter-spacing:3px;
+  opacity:.75;
+}
+
+.song-heart{
+  font-size:30px;
+  margin-left:3px;
+}
+
+
+.player{
+  width:min(700px,100%);
+  margin:0 auto 43px;
+  padding:21px 23px 18px;
+  border:1px solid rgba(255,255,255,.78);
+  border-radius:30px;
+  background:linear-gradient(
+    135deg,
+    rgba(255,255,255,.66),
+    rgba(225,248,221,.38)
+  );
+  box-shadow:
+    0 25px 60px rgba(8,88,70,.18),
+    inset 0 1px 0 rgba(255,255,255,.8);
+  backdrop-filter:blur(20px);
+  -webkit-backdrop-filter:blur(20px);
+}
+
+.player-top{
+  display:flex;
+  align-items:center;
+  gap:15px;
+}
+
+.cover{
+  width:65px;
+  height:65px;
+  flex:0 0 65px;
+  display:grid;
+  place-items:center;
+  border-radius:21px;
+  color:#fffbd2;
+  background:linear-gradient(145deg,#0a6959,#063f37);
+  box-shadow:
+    0 10px 20px rgba(5,76,63,.25),
+    inset 0 1px 1px rgba(255,255,255,.18);
+  font-size:30px;
+}
+
+.player-info{
+  flex:1;
+  min-width:0;
+}
+
+.player-info h3{
+  font-size:1.18rem;
+  font-weight:900;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+.player-info p{
+  margin-top:5px;
+  font-size:.78rem;
+  font-weight:700;
+  opacity:.62;
+}
+
+.like{
+  width:43px;
+  height:43px;
+  display:grid;
+  place-items:center;
+  border-radius:50%;
+  color:var(--deep);
+  background:rgba(255,255,255,.42);
+  border:1px solid rgba(255,255,255,.65);
+  font-size:23px;
+}
+
+
+.custom-audio{
+  margin-top:18px;
+  padding:14px 15px 12px;
+  border-radius:22px;
+  background:linear-gradient(145deg,rgba(4,78,66,.98),rgba(8,103,87,.96));
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.16),
+    0 12px 28px rgba(4,73,61,.20);
+  color:#fffbd2;
+}
+
+.audio-row{
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+
+.play-btn{
+  width:48px;
+  height:48px;
+  flex:0 0 48px;
+  border:0;
+  border-radius:50%;
+  display:grid;
+  place-items:center;
+  cursor:pointer;
+  color:#07594e;
+  background:#fff4ae;
+  font-size:19px;
+  box-shadow:0 7px 18px rgba(0,0,0,.18);
+  transition:transform .18s ease, box-shadow .18s ease;
+}
+
+.play-btn:hover{
+  transform:scale(1.06);
+  box-shadow:0 9px 23px rgba(0,0,0,.25);
+}
+
+.play-btn:active{transform:scale(.96)}
+
+.time{
+  min-width:42px;
+  font-size:.72rem;
+  font-weight:800;
+  text-align:center;
+  opacity:.88;
+}
+
+.progress{
+  flex:1;
+  height:7px;
+  border-radius:20px;
+  appearance:none;
+  -webkit-appearance:none;
+  background:rgba(255,255,255,.25);
+  outline:none;
+  cursor:pointer;
+}
+
+.progress::-webkit-slider-thumb{
+  appearance:none;
+  -webkit-appearance:none;
+  width:16px;
+  height:16px;
+  border-radius:50%;
+  background:#fff4ae;
+  border:2px solid #07594e;
+  box-shadow:0 2px 7px rgba(0,0,0,.25);
+}
+
+.progress::-moz-range-thumb{
+  width:16px;
+  height:16px;
+  border-radius:50%;
+  background:#fff4ae;
+  border:2px solid #07594e;
+  box-shadow:0 2px 7px rgba(0,0,0,.25);
+}
+
+.control-row{
+  display:flex;
+  align-items:center;
+  gap:9px;
+  margin-top:11px;
+}
+
+.small-btn{
+  width:34px;
+  height:34px;
+  border:1px solid rgba(255,255,255,.20);
+  border-radius:50%;
+  display:grid;
+  place-items:center;
+  cursor:pointer;
+  color:#fffbd2;
+  background:rgba(255,255,255,.10);
+  font-size:14px;
+  transition:background .18s ease, transform .18s ease;
+}
+
+.small-btn:hover{
+  background:rgba(255,255,255,.20);
+  transform:translateY(-1px);
+}
+
+.volume{
+  width:90px;
+  height:5px;
+  appearance:none;
+  -webkit-appearance:none;
+  border-radius:20px;
+  background:rgba(255,255,255,.25);
+  cursor:pointer;
+}
+
+.volume::-webkit-slider-thumb{
+  appearance:none;
+  -webkit-appearance:none;
+  width:13px;
+  height:13px;
+  border-radius:50%;
+  background:#fff4ae;
+}
+
+.volume::-moz-range-thumb{
+  width:13px;
+  height:13px;
+  border-radius:50%;
+  background:#fff4ae;
+  border:0;
+}
+
+.speed{
+  margin-left:auto;
+  border:1px solid rgba(255,255,255,.22);
+  border-radius:12px;
+  padding:6px 9px;
+  color:#fffbd2;
+  background:rgba(255,255,255,.09);
+  font-size:.68rem;
+  font-weight:800;
+  cursor:pointer;
+}
+
+
+.song-nav{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  gap:14px;
+  margin-top:14px;
+}
+
+.nav-song-btn{
+  width:46px;
+  height:46px;
+  border:1px solid rgba(255,255,255,.22);
+  border-radius:50%;
+  display:grid;
+  place-items:center;
+  cursor:pointer;
+  color:#fffbd2;
+  background:rgba(255,255,255,.10);
+  font-size:19px;
+  font-weight:900;
+  transition:transform .18s ease, background .18s ease, box-shadow .18s ease;
+}
+
+.nav-song-btn:hover{
+  transform:translateY(-2px) scale(1.04);
+  background:rgba(255,255,255,.20);
+  box-shadow:0 7px 16px rgba(0,0,0,.16);
+}
+
+.nav-song-btn:active{transform:scale(.95)}
+
+.nav-song-btn.main{
+  width:52px;
+  height:52px;
+  background:#fff4ae;
+  color:#07594e;
+  font-size:22px;
+  box-shadow:0 7px 18px rgba(0,0,0,.18);
+}
+
+.nav-song-btn.main:hover{background:#fff7c8}
+
+.song-counter{
+  min-width:64px;
+  text-align:center;
+  font-size:.68rem;
+  font-weight:900;
+  letter-spacing:1px;
+  opacity:.72;
+}
+
+.player-tip{
+  margin-top:8px;
+  text-align:center;
+  font-size:.68rem;
+  font-weight:700;
+  opacity:.48;
+}
+
+
+.lyrics{
+  width:min(680px,100%);
+  margin:auto;
+  text-align:center;
+  color:var(--deep);
+  font-size:clamp(1rem,2vw,1.15rem);
+  font-weight:900;
+  line-height:1.58;
+}
+
+.verse{
+  margin-bottom:27px;
+  text-shadow:0 1px 1px rgba(255,255,255,.2);
+}
+
+.verse:after{
+  content:"♥";
+  display:block;
+  margin-top:18px;
+  font-size:15px;
+  opacity:.8;
+}
+
+.verse:last-child:after{display:none}
+
+
+.divider{
+  width:75%;
+  max-width:480px;
+  height:1px;
+  margin:0 auto 82px;
+  background:rgba(7,89,78,.22);
+  position:relative;
+}
+
+.divider:after{
+  content:"♥";
+  position:absolute;
+  left:50%;
+  top:50%;
+  transform:translate(-50%,-50%);
+  padding:0 14px;
+  color:var(--deep);
+  background:#c6e8b7;
+  font-size:18px;
+}
+
+
+.owner{
+  width:min(680px,100%);
+  margin:5px auto 0;
+  padding:18px 22px;
+  display:flex;
+  align-items:center;
+  gap:18px;
+  border-radius:26px;
+  color:#fffbd2;
+  background:linear-gradient(135deg,#07594e,#063f37);
+  box-shadow:0 20px 45px rgba(5,75,61,.22);
+}
+
+.owner-photo{
+  width:76px;
+  height:76px;
+  flex:0 0 76px;
+  border-radius:50%;
+  overflow:hidden;
+  border:3px solid rgba(255,249,190,.9);
+  background:#dbe8dc;
+  box-shadow:0 7px 20px rgba(0,0,0,.18);
+}
+
+.owner-photo img{
+  width:100%;
+  height:100%;
+  display:block;
+  object-fit:cover;
+}
+
+
+
+.owner-text{
+  flex:1;
+}
+
+.owner-label{
+  font-family:"Brush Script MT","Segoe Script",cursive;
+  font-size:2rem;
+  font-weight:700;
+}
+
+.owner-name{
+  margin-top:2px;
+  font-size:1rem;
+  font-weight:900;
+}
+
+.owner-about{
+  margin-top:5px;
+  font-size:.73rem;
+  line-height:1.5;
+  opacity:.82;
+}
+
+.owner-heart{
+  font-size:28px;
+}
+
+
+
+
+.leaves{
+  width:100%;
+  height:170px;
+  margin-top:35px;
+  position:relative;
+  overflow:hidden;
+  pointer-events:none;
+}
+
+.leaf-left,.leaf-right{
+  position:absolute;
+  bottom:-20px;
+  width:180px;
+  height:190px;
+}
+
+.leaf-left{left:0}
+.leaf-right{right:0;transform:scaleX(-1)}
+
+.stem{
+  position:absolute;
+  left:60px;
+  bottom:-15px;
+  width:5px;
+  height:175px;
+  border-radius:50%;
+  background:var(--deep);
+  transform:rotate(-17deg);
+}
+
+.leaf{
+  position:absolute;
+  width:29px;
+  height:62px;
+  border-radius:100% 0 100% 0;
+  background:var(--deep);
+  transform-origin:bottom right;
+}
+
+.l1{left:36px;bottom:67px;transform:rotate(-62deg)}
+.l2{left:48px;bottom:93px;transform:rotate(-36deg)}
+.l3{left:62px;bottom:116px;transform:rotate(-10deg)}
+.l4{left:74px;bottom:139px;transform:rotate(15deg)}
+.l5{left:75px;bottom:43px;transform:rotate(-80deg)}
+.l6{left:89px;bottom:72px;transform:rotate(-51deg)}
+.l7{left:96px;bottom:102px;transform:rotate(-22deg)}
+
+.footer{
+  text-align:center;
+  padding:22px 0 30px;
+  font-size:.72rem;
+  font-weight:700;
+  opacity:.55;
+}
+
+@media(max-width:650px){
+  .page{padding:25px 13px 0}
+
+  .decor-heart{font-size:27px}
+
+  .h1{left:1%}.h2{right:1%}.h3{left:2%}.h4{right:2%}
+
+  .song-heading{gap:10px}
+
+  .song-number{
+    width:45px;
+    height:45px;
+    flex-basis:45px;
+    font-size:1.1rem;
+  }
+
+  .song-name{font-size:2.8rem}
+
+  .player{
+    padding:18px;
+    border-radius:24px;
+  }
+
+  .cover{
+    width:55px;
+    height:55px;
+    flex-basis:55px;
+    border-radius:17px;
+  }
+
+  .nav-song-btn{width:42px;height:42px}
+  .nav-song-btn.main{width:49px;height:49px}
+
+  .owner{
+    padding:16px;
+    gap:13px;
+  }
+
+  .owner-photo{
+    width:65px;
+    height:65px;
+    flex-basis:65px;
+  }
+
+  .owner-label{font-size:1.65rem}
+}
+
+#siteLoader{
+  position:fixed;
+  inset:0;
+  z-index:99999;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  overflow:hidden;
+  background:
+    radial-gradient(circle at 50% 38%,rgba(255,251,211,.98) 0 7%,rgba(255,231,139,.92) 22%,transparent 48%),
+    linear-gradient(180deg,#ffe995 0%,#eef0b4 48%,#b9e9bd 100%);
+  transition:opacity .65s ease,visibility .65s ease;
+}
+#siteLoader.hide{
+  opacity:0;
+  visibility:hidden;
+  pointer-events:none;
+}
+.loader-content{
+  position:relative;
+  width:min(330px,82vw);
+  text-align:center;
+  color:var(--deep);
+}
+.loader-logo{
+  width:112px;
+  height:112px;
+  margin:0 auto 25px;
+  position:relative;
+  display:grid;
+  place-items:center;
+  border-radius:34px;
+  color:#fffbd2;
+  background:linear-gradient(145deg,#0a6959,#063f37);
+  box-shadow:0 18px 45px rgba(5,76,63,.28),inset 0 1px 1px rgba(255,255,255,.22);
+  animation:loaderLogoIn .9s cubic-bezier(.2,.9,.2,1) both,loaderPulse 1.7s ease-in-out .9s infinite;
+}
+.loader-logo:before{
+  content:"";
+  position:absolute;
+  inset:-10px;
+  border:2px solid rgba(7,89,78,.18);
+  border-radius:40px;
+  animation:loaderRing 1.8s ease-in-out infinite;
+}
+.loader-play{
+  width:0;
+  height:0;
+  margin-left:7px;
+  border-top:18px solid transparent;
+  border-bottom:18px solid transparent;
+  border-left:28px solid #fff4ae;
+  filter:drop-shadow(0 4px 6px rgba(0,0,0,.16));
+}
+.loader-title{
+  font-family:"Brush Script MT","Segoe Script",cursive;
+  font-size:clamp(2.8rem,10vw,4.4rem);
+  line-height:.9;
+  font-weight:700;
+  animation:loaderTextIn .8s ease .25s both;
+}
+.loader-subtitle{
+  margin-top:12px;
+  font-size:.7rem;
+  font-weight:900;
+  letter-spacing:4px;
+  opacity:.68;
+  animation:loaderTextIn .8s ease .4s both;
+}
+.loader-spinner{
+  width:30px;
+  height:30px;
+  margin:24px auto 0;
+  border:3px solid rgba(7,89,78,.18);
+  border-top-color:var(--deep);
+  border-right-color:var(--deep);
+  border-radius:50%;
+  animation:spin .8s linear infinite;
+}
+.loader-dots{
+  margin-top:12px;
+  font-size:.68rem;
+  font-weight:800;
+  letter-spacing:2px;
+  opacity:.58;
+}
+.loader-dots span{
+  display:inline-block;
+  animation:dot 1.2s infinite;
+}
+.loader-dots span:nth-child(2){animation-delay:.15s}
+.loader-dots span:nth-child(3){animation-delay:.3s}
+
+body.loading{
+  overflow:hidden;
+}
+@keyframes loaderLogoIn{
+  from{opacity:0;transform:scale(.55) rotate(-12deg)}
+  to{opacity:1;transform:scale(1) rotate(0)}
+}
+@keyframes loaderPulse{
+  0%,100%{transform:scale(1)}
+  50%{transform:scale(1.045)}
+}
+@keyframes loaderRing{
+  0%{opacity:.7;transform:scale(.86)}
+  70%,100%{opacity:0;transform:scale(1.18)}
+}
+@keyframes loaderTextIn{
+  from{opacity:0;transform:translateY(12px)}
+  to{opacity:1;transform:translateY(0)}
+}
+@keyframes spin{
+  to{transform:rotate(360deg)}
+}
+@keyframes dot{
+  0%,70%,100%{opacity:.25;transform:translateY(0)}
+  35%{opacity:1;transform:translateY(-3px)}
+}
+
+</style>
+</head>
+
+<body class="loading>
+
+<div class="heart a">♡</div>
+<div class="heart b">♡</div>
+<div class="heart c">♡</div>
+<div class="heart d">♡</div>
+<div class="heart e">♡</div>
+
+
+<div id="siteLoader" aria-label="Loading website">
+  <div class="loader-content">
+    <div class="loader-logo">
+      <div class="loader-play"></div>
+    </div>
+    <div class="loader-title">Song Player</div>
+    <div class="loader-subtitle">FEEL • LISTEN • RELIVE</div>
+    <div class="loader-spinner"></div>
+    <div class="loader-dots">LOADING<span>.</span><span>.</span><span>.</span></div>
+  </div>
+</div>
+
+<main class="page">
+
+<header class="hero">
+  <div class="sun"></div>
+  <h1>My Song Collection</h1>
+  <p>FEEL • LISTEN • RELIVE</p>
+  <div class="line">— ♥ —</div>
+</header>
+
+<div class="songs-container" id="songsContainer">
+
+
+
+<section class="song">
+
+  <div class="song-heading">
+    <div class="song-number">1</div>
+
+    <div>
+      <div class="song-name">Dekha Tenu</div>
+      
+      <div class="song-meta">Writer:- Rajiv Kumar Arora {Jaani}/ Artist:- Muhammad Faiz</div>
+    </div>
+
+    <div class="song-heart">♡</div>
+  </div>
+
+  <div class="player">
+
+    <div class="player-top">
+      <div class="cover">♪</div>
+
+      <div class="player-info">
+        <h3>Dekha Tenu Pehli Pehli Baar Ve.</h3>
+        <p>Jaani / Muhammad Faiz</p>
+      </div>
+
+      <div class="like">♡</div>
+    </div>
+
+  
+    <div class="custom-audio">
+      <audio id="audio1" preload="metadata">
+        <source src="C:\Users\unkno\Music\heart.mp3" type="audio/mpeg">
+      </audio>
+
+      <div class="audio-row">
+        <button class="play-btn" type="button" onclick="togglePlay('audio1',this)" aria-label="Play">▶</button>
+        <span class="time" id="current1">0:00</span>
+        <input class="progress" id="progress1" type="range" min="0" max="100" value="0"
+               oninput="seekAudio('audio1',this.value)">
+        <span class="time" id="duration1">0:00</span>
+      </div>
+
+      <div class="control-row">
+        <button class="small-btn" type="button" onclick="skipAudio('audio1',-10)" title="Back 10 seconds">↶</button>
+        <button class="small-btn" type="button" onclick="skipAudio('audio1',10)" title="Forward 10 seconds">↷</button>
+        <button class="small-btn" type="button" onclick="toggleMute('audio1',this)" title="Mute">🔊</button>
+        <input class="volume" id="volume1" type="range" min="0" max="1" step="0.01" value="1"
+               oninput="setVolume('audio1',this.value)">
+        <button class="speed" type="button" onclick="changeSpeed('audio1',this)">1×</button>
+      </div>
+      <div class="song-nav">
+        <button class="nav-song-btn" type="button" onclick="changeSong(-1)" aria-label="Previous song" title="Previous song">‹</button>
+        <div class="song-counter"><span class="nav-current">1</span> / <span class="nav-total">2</span></div>
+        <button class="nav-song-btn" type="button" onclick="changeSong(1)" aria-label="Next song" title="Next song">›</button>
+      </div>
+    </div>
+
+    <div class="player-tip">LOCAL MP3 PLAYER • YOUR MUSIC COLLECTION</div>
+  </div>
+
+  <div class="lyrics">
+
+    <div class="verse">
+      Dekha Tenu Pehli Pehli Baar Ve<br>
+      Hone Laga Dil Bekarar Ve<br>
+      Rabba Mainu Ki Ho Gaya<br>
+      Dil Janiye Main Tera Hi Ho Gaya
+    </div>
+
+    <div class="verse">
+      Ho Tere Agge Piche Ghumme Sohneya<br>
+      Jadon Tere Hathh Chumme Sohneya<br>
+      Mithha Mithha Jee Ho Gaya<br>
+      Dil Jaaniye Haye Mainu Ki Ho Gaya
+    </div>
+
+    <div class="verse">
+      Mai Dil Tere Kadma Ch Rakhan Dholna<br>
+      Mai Tere Agge Ankhiyan Na Chakkan Dholna<br>
+      Je Tere Te Rabb Vicchon Takkna Paye<br>
+      Te Fir Mai Tennu Hi Takkan Dholna
+    </div>
+
+    <div class="verse">
+      Tu Jadon Teri Zulfan Nu Kholeya<br>
+      Mere Kolon Gaya Nai Je Boleya<br>
+      Meri Tu Kami Ho Gaya<br>
+      Dil Janiye Ae Menu Ki Ho Gaya
+    </div>
+
+    <div class="verse">
+      Ye Mahal Minare Suraj Taare<br>
+      Humse Pare Le Jaaiye<br>
+      Main Teri Tu Mera<br>
+      Aur Nai Kucch Chahiye
+    </div>
+
+    <div class="verse">
+      Ye Mahal Minare Suraj Taare Humse Pare Le Jaaiye<br>
+      Main Teri Tu Mera Oar Nahi Kuch Chahiye
+    </div>
+
+    <div class="verse">
+      Aaiye Ji Aaiye Mere Paas Itna Aaiye<br>
+      Nazrein Milake Mere Hath Choom Jaaiye
+    </div>
+
+    <div class="verse">
+      Oh Mennu Aisa Nasha Chadha De Dholna<br>
+      Jo Sidha Mainu Rabb Naal Milade Dholna<br>
+      Ho Jag Diyan Nazran Buriyan<br>
+      Oh Sir Utton Mirchan Karade Dholna
+    </div>
+
+    <div class="verse">
+      Oh Tere Jaisa Yaar Kithey Hove Ve<br>
+      Jo Rondeyan De Zakhman Nu Dhove Ve<br>
+      Tu Jaani Oh Navi HoGya<br>
+      Dil Janiye Haye Mainu Ki HoGya
+    </div>
+
+    <div class="verse">
+      Oh Jaha Jaha Teray Pair Pade<br>
+      Wahaan Wahaan Nazare Hain<br>
+      Tu Mera Chandarma Aur Hum Tere Tare Hein
+    </div>
+
+    <div class="verse">
+      Oh Jahaan Jahaan Tere Pair Pade<br>
+      Wahaan Wahaan Nazare Hein<br>
+      Tu Mera Chandarma Aur Hum Tere Taare Hain
+    </div>
+
+    <div class="verse">
+      Tare Hein Tare Teri Aankhon Ke Taare<br>
+      Maare Hain Maare Teri Baaton Ke Maare
+    </div>
+
+    <div class="verse">
+      Ho Tenu Vekh Badlaan Ne Rang Badley<br>
+      Ho Ud’de Parindeyan Ne Phang Badley<br>
+      Te Chan Soche Main Ki Badlan<br>
+      Ho Yaara Tere Karke Malang Badle
+    </div>
+
+    <div class="verse">
+      Oh Jaadu He Re Jaadu Teri Baaton Mein<br>
+      Suni Suni Kali Kali Raaton Mein<br>
+      Tu Roshni HoGya<br>
+      Dil Jaaniye Eh Mainu Ki Ho Gaya
+    </div>
+
+    <div class="verse">
+      Dekha Tenu Pehli Pehli Baar Ve<br>
+      Hone Laga Dil Bekarar Ve<br>
+      Rabba Mainu Ki Ho Gaya
+    </div>
+
+  </div>
+</section>
+
+
+
+
+<section class="song">
+
+  <div class="song-heading">
+    <div class="song-number">2</div>
+
+    <div>
+      <div class="song-name">Vaaste</div>
+      
+      <div class="song-meta">Writer / Artist Name</div>
+    </div>
+
+    <div class="song-heart">♡</div>
+  </div>
+
+  <div class="player">
+
+    <div class="player-top">
+      <div class="cover">♪</div>
+
+      <div class="player-info">
+        <h3>Vaaste Jaan Bhi Doon</h3>
+        <p>Writer / Artist Name</p>
+      </div>
+
+      <div class="like">♡</div>
+    </div>
+
+    <div class="custom-audio">
+      <audio id="audio2" preload="metadata">
+        <source src="C:\Users\unkno\Music\vaaste.mp3" type="audio/mpeg">
+      </audio>
+
+      <div class="audio-row">
+        <button class="play-btn" type="button" onclick="togglePlay('audio2',this)" aria-label="Play">▶</button>
+        <span class="time" id="current2">0:00</span>
+        <input class="progress" id="progress2" type="range" min="0" max="100" value="0"
+               oninput="seekAudio('audio2',this.value)">
+        <span class="time" id="duration2">0:00</span>
+      </div>
+
+      <div class="control-row">
+        <button class="small-btn" type="button" onclick="skipAudio('audio2',-10)" title="Back 10 seconds">↶</button>
+        <button class="small-btn" type="button" onclick="skipAudio('audio2',10)" title="Forward 10 seconds">↷</button>
+        <button class="small-btn" type="button" onclick="toggleMute('audio2',this)" title="Mute">🔊</button>
+        <input class="volume" id="volume2" type="range" min="0" max="1" step="0.01" value="1"
+               oninput="setVolume('audio2',this.value)">
+        <button class="speed" type="button" onclick="changeSpeed('audio2',this)">1×</button>
+      </div>
+      <div class="song-nav">
+        <button class="nav-song-btn" type="button" onclick="changeSong(-1)" aria-label="Previous song" title="Previous song">‹</button>
+        <div class="song-counter"><span class="nav-current">1</span> / <span class="nav-total">2</span></div>
+        <button class="nav-song-btn" type="button" onclick="changeSong(1)" aria-label="Next song" title="Next song">›</button>
+      </div>
+    </div>
+
+    <div class="player-tip">LOCAL MP3 PLAYER • YOUR MUSIC COLLECTION</div>
+  </div>
+
+  <div class="lyrics">
+
+    <div class="verse">
+      Vaaste jaan bhi doon<br>
+      Main gawaa imaan bhi doon<br>
+      Kismaton ka likha mod doon
+    </div>
+
+    <div class="verse">
+      Badle mein main tere<br>
+      Jo Khuda khud bhi de<br>
+      Jannatein, sach kahoon chhod doon
+    </div>
+
+    <div class="verse">
+      Tumse zyada main na jaanu<br>
+      Tumse khudko main pehchaanu<br>
+      Tumko bas main apna maanu mahiya
+    </div>
+
+   
+
+    <div class="verse">
+      Vaaste jaan bhi doon<br>
+      Main gawaa imaan bhi doon<br>
+      Qismaton ka likha mod doon
+    </div>
+
+    <div class="verse">
+      Tere alawa koi bhi khwahish<br>
+      Nahi hai baaki dil mein<br>
+      Kadam uthaaun jahaan bhi jaaun<br>
+      Tujhi se jaaun mil main
+    </div>
+
+    <div class="verse">
+      Tere alawa koi bhi khwahish<br>
+      Nahi hai baaki dil mein<br>
+      Kadam uthaaun jahaan bhi jaaun<br>
+      Tujhi se jaaun mil main
+    </div>
+
+    <div class="verse">
+      Tere liye.. mera safar..<br>
+      Tere bina.. main jaaun kidhar
+    </div>
+
+    <div class="verse">
+      Tumse zyada main na jaanu<br>
+      Tumse khudko main pehchaanu<br>
+      Tumko bas main apna maanu mahiya
+    </div>
+
+    <div class="verse">
+      Vaaste jaan bhi doon<br>
+      Main gawaa imaan bhi doon<br>
+      Qismaton ka likha mod doon
+    </div>
+
+    <div class="verse">
+      Badle mein main tere<br>
+      Jo Khuda khud bhi de<br>
+      Jannatein, sach kahoon chhod doon
+    </div>
+
+    <div class="verse">
+      Tu hi savera mera<br>
+      Tu hi kinara mera<br>
+      Tu hi hai dariya mera<br>
+      Khuda ka zariya mera<br>
+      Tujhi se hota shuru ye mera kaarwan<br>
+      Tujhi pe jaake khatam<br>
+      Ye mera saara jahaan
+    </div>
+
+    <div class="verse">
+      Vaaste jaan bhi doon<br>
+      Main gawaa imaan bhi doon<br>
+      Qismaton ka likha mod doon
+    </div>
+
+  </div>
+</section>
+
+</div>
+
+<div class="divider"></div>
+
+
+
+
+<div class="owner">
+
+  <div class="owner-photo">
+    <img src="Dark.jpeg" alt="Website Owner">
+  </div>
+
+  <div class="owner-text">
+    <div class="owner-label">Web Programmer</div>
+
+
+    <div class="owner-name">Dark Akv</div>
+
+    <div class="owner-about">
+      Designs beautifully • Develops creatively • Builds with passion
+    </div>
+  </div>
+
+  <div class="owner-heart">♥</div>
+
+</div>
+
+
+
+<div class="leaves">
+
+  <div class="leaf-left">
+    <div class="stem"></div>
+    <div class="leaf l1"></div>
+    <div class="leaf l2"></div>
+    <div class="leaf l3"></div>
+    <div class="leaf l4"></div>
+    <div class="leaf l5"></div>
+    <div class="leaf l6"></div>
+    <div class="leaf l7"></div>
+  </div>
+
+  <div class="leaf-right">
+    <div class="stem"></div>
+    <div class="leaf l1"></div>
+    <div class="leaf l2"></div>
+    <div class="leaf l3"></div>
+    <div class="leaf l4"></div>
+    <div class="leaf l5"></div>
+    <div class="leaf l6"></div>
+    <div class="leaf l7"></div>
+  </div>
+
+</div>
+
+<footer class="footer">
+  Made with sunshine, music & memories ♥
+</footer>
+
+</main>
+
+<script>
+
+const loader = document.getElementById("siteLoader");
+window.addEventListener("load",()=>{
+  setTimeout(()=>{
+    loader.classList.add("hide");
+    document.body.classList.remove("loading");
+  },5000);
+});
+
+
+
+let currentSongIndex = 0;
+
+function getSongs(){
+  return Array.from(document.querySelectorAll("#songsContainer .song"));
+}
+
+function updateSongCounters(){
+  const songs = getSongs();
+  document.querySelectorAll(".nav-total").forEach(el=>{
+    el.textContent = songs.length;
+  });
+
+  document.querySelectorAll(".nav-current").forEach(el=>{
+    el.textContent = currentSongIndex + 1;
+  });
+}
+
+function showSong(index, autoplay=false){
+  const songs = getSongs();
+  if(!songs.length) return;
+
+  currentSongIndex = (index + songs.length) % songs.length;
+
+  document.querySelectorAll("audio").forEach(audio=>{
+    audio.pause();
+    audio.currentTime = 0;
+
+    const player = audio.closest(".custom-audio");
+    if(player){
+      const playButton = player.querySelector(".play-btn");
+      if(playButton){
+        playButton.textContent = "▶";
+        playButton.setAttribute("aria-label","Play");
+      }
+    }
+  });
+
+  songs.forEach((song,i)=>{
+    song.classList.toggle("active", i === currentSongIndex);
+  });
+
+  updateSongCounters();
+
+  window.scrollTo({
+    top: Math.max(0, songs[currentSongIndex].offsetTop - 28),
+    behavior: "smooth"
+  });
+
+  if(autoplay){
+    const audio = songs[currentSongIndex].querySelector("audio");
+    const button = songs[currentSongIndex].querySelector(".play-btn");
+    if(audio && button){
+      audio.play().catch(()=>{});
+      button.textContent = "❚❚";
+      button.setAttribute("aria-label","Pause");
+    }
+  }
+}
+
+function changeSong(direction){
+  showSong(currentSongIndex + direction, false);
+}
+
+function fmt(seconds){
+  if(!isFinite(seconds)) return "0:00";
+  const m = Math.floor(seconds / 60);
+  const s = Math.floor(seconds % 60).toString().padStart(2,"0");
+  return `${m}:${s}`;
+}
+
+function togglePlay(id, button){
+  const audio = document.getElementById(id);
+
+  document.querySelectorAll("audio").forEach(a=>{
+    if(a !== audio) a.pause();
+  });
+
+  if(audio.paused){
+    audio.play().catch(()=>{});
+  }else{
+    audio.pause();
+  }
+}
+
+function seekAudio(id,value){
+  const audio = document.getElementById(id);
+  if(audio.duration) audio.currentTime = (value / 100) * audio.duration;
+}
+
+function skipAudio(id,seconds){
+  const audio = document.getElementById(id);
+  audio.currentTime = Math.max(
+    0,
+    Math.min(audio.duration || 0, audio.currentTime + seconds)
+  );
+}
+
+function toggleMute(id,button){
+  const audio = document.getElementById(id);
+  audio.muted = !audio.muted;
+  button.textContent = audio.muted ? "🔇" : "🔊";
+}
+
+function setVolume(id,value){
+  const audio = document.getElementById(id);
+  audio.volume = Number(value);
+  audio.muted = audio.volume === 0;
+
+  const button = audio.closest(".custom-audio").querySelector(".small-btn:nth-of-type(3)");
+  if(button){
+    button.textContent = audio.muted ? "🔇" : "🔊";
+  }
+}
+
+function changeSpeed(id,button){
+  const audio = document.getElementById(id);
+  const speeds = [1,1.25,1.5,1.75,2,.75];
+  const current = speeds.indexOf(audio.playbackRate);
+  const next = speeds[(current + 1) % speeds.length];
+
+  audio.playbackRate = next;
+  button.textContent = next + "×";
+}
+
+function setupAudio(audio){
+  const n = audio.id.replace("audio","");
+  const progress = document.getElementById("progress"+n);
+  const current = document.getElementById("current"+n);
+  const duration = document.getElementById("duration"+n);
+  const playButton = audio.closest(".custom-audio").querySelector(".play-btn");
+
+  audio.addEventListener("loadedmetadata",()=>{
+    duration.textContent = fmt(audio.duration);
+  });
+
+  audio.addEventListener("timeupdate",()=>{
+    current.textContent = fmt(audio.currentTime);
+
+    if(audio.duration){
+      progress.value = (audio.currentTime / audio.duration) * 100;
+    }
+  });
+
+  audio.addEventListener("play",()=>{
+    playButton.textContent = "❚❚";
+    playButton.setAttribute("aria-label","Pause");
+
+    document.querySelectorAll("audio").forEach(other=>{
+      if(other !== audio) other.pause();
+    });
+  });
+
+  audio.addEventListener("pause",()=>{
+    playButton.textContent = "▶";
+    playButton.setAttribute("aria-label","Play");
+  });
+
+  audio.addEventListener("ended",()=>{
+    playButton.textContent = "▶";
+    playButton.setAttribute("aria-label","Play");
+    progress.value = 0;
+    current.textContent = "0:00";
+  });
+}
+
+
+document.querySelectorAll("#songsContainer audio").forEach(setupAudio);
+
+document.addEventListener("DOMContentLoaded",()=>{
+  showSong(0, false);
+});
+</script>
+
+
+<!--
+HOW TO ADD OR EDIT A SONG:
+Copy one complete <section class="song">...</section> inside #songsContainer, then change its song number, title, writer/artist, MP3 filename, and lyrics. Keep each lyric paragraph inside <div class="verse">...</div>. Put each new verse in its own .verse div. You do not need to edit the Previous/Next buttons or JavaScript; the website automatically includes new songs in the loop and updates the song count.
+-->
+
+</body>
+</html>
